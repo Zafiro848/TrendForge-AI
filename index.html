@@ -638,3 +638,156 @@ html+=`
 <div>
 <strong>${o[0]}</strong>
 <p style="color:var(--muted);margin-top:
+<p style="color:var(--muted);margin-top:5px">
+${o[2]} · ${o[3]}
+</p>
+</div>
+
+<div>
+<div class="score">${o[1]}</div>
+<span class="badge">Oportunidad</span>
+</div>
+</div>`;
+});
+
+document.getElementById('radarResult').innerHTML=html;
+}
+
+function analyzeTrend(){
+
+const topic=document.getElementById('trendInput').value.trim();
+
+if(!topic){
+alert('Escribe primero un tema.');
+return;
+}
+
+document.getElementById('analysisResult').innerHTML=`
+
+<div class="idea">
+
+<strong>🔥 Análisis de: ${topic}</strong>
+
+<p style="color:var(--muted);margin-top:10px">
+El concepto tiene elementos interesantes para desarrollar
+contenido original.
+</p>
+
+<div class="tags">
+<span class="tag">Misterio</span>
+<span class="tag">Curiosidad</span>
+<span class="tag">Emoción</span>
+<span class="tag">Retención</span>
+</div>
+
+<div style="margin-top:18px">
+<strong>Potencial estimado</strong>
+<div class="score">92/100</div>
+</div>
+
+<button class="btn full"
+onclick="useIdea('${topic.replace(/'/g,"")}')">
+Crear contenido →
+</button>
+
+</div>`;
+}
+
+function useIdea(topic){
+
+document.getElementById('storyTopic').value=topic;
+
+showPage('studio');
+}
+
+function generateStory(){
+
+const topic=document.getElementById('storyTopic').value.trim();
+const style=document.getElementById('storyStyle').value;
+
+if(!topic){
+alert('Escribe primero un tema.');
+return;
+}
+
+const title=
+'Contenido sobre '+topic.charAt(0).toUpperCase()+topic.slice(1);
+
+const story=`
+
+GANCHO:
+Algo está ocurriendo y casi nadie está prestando atención...
+
+DESARROLLO:
+Presenta rápidamente el contexto y explica por qué el tema es interesante.
+
+PUNTO DE CURIOSIDAD:
+Introduce un dato, problema o situación que mantenga al espectador mirando.
+
+DESARROLLO PRINCIPAL:
+Explica el tema de forma clara, dinámica y visual.
+
+GIRO:
+Presenta una información inesperada que cambie la percepción inicial.
+
+CIERRE:
+Resume la idea principal y deja una pregunta o reflexión que invite a interactuar.
+`;
+
+document.getElementById('storyResult').innerHTML=`
+
+<div class="idea">
+
+<strong>🎬 ${title}</strong>
+
+<p style="color:var(--muted);margin-top:5px">
+Estilo: ${style}
+</p>
+
+<textarea style="margin-top:15px">${story}</textarea>
+
+<button class="btn full"
+onclick="saveProject('${title.replace(/'/g,"")}')">
+💾 Guardar proyecto
+</button>
+
+</div>`;
+}
+
+function saveProject(title){
+
+projects.push(title);
+
+document.getElementById('projectCount').textContent=projects.length;
+
+const list=document.getElementById('projectsList');
+
+list.classList.remove('empty');
+
+list.innerHTML=projects.map((p,i)=>`
+
+<div class="opportunity">
+
+<div>
+
+<strong>${p}</strong>
+
+<p style="color:var(--muted);margin-top:5px">
+Proyecto ${i+1} · Laboratorio Zafiro Net
+</p>
+
+</div>
+
+<span class="badge">Guardado</span>
+
+</div>
+
+`).join('');
+
+alert('Proyecto guardado correctamente.');
+}
+
+</script>
+
+</body>
+</html>
