@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrendForge AI</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+--bg:#07080d;
+--panel:#10121a;
+--panel2:#151824;
+--line:#272b38;
+--text:#f5f7fb;
+--muted:#8d93a5;
+--primary:#8b5cf6;
+--primary2:#6366f1;
+--green:#22c55e;
+--orange:#f59e0b;
+}
+
+body{
+font-family:Inter,Arial,sans-serif;
+background:var(--bg);
+color:var(--text);
+min-height:100vh;
+}
+
+button,input,select,textarea{font:inherit}
+
+.app{
+display:flex;
+min-height:100vh;
+}
+
+.sidebar{
+width:245px;
+background:#0b0c12;
+border-right:1px solid var(--line);
+padding:22px 15px;
+position:fixed;
+height:100vh;
+left:0;
+top:0;
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:10px;
+font-size:20px;
+font-weight:800;
+margin-bottom:35px;
+}
+
+.logoIcon{
+width:38px;
+height:38px;
+border-radius:12px;
+display:grid;
+place-items:center;
+background:linear-gradient(135deg,#8b5cf6,#ec4899);
+font-size:20px;
+}
+
+.nav{
+display:flex;
+flex-direction:column;
+gap:6px;
+}
+
+.nav button{
+border:0;
+background:transparent;
+color:#aeb3c2;
+padding:13px;
+border-radius:10px;
+text-align:left;
+cursor:pointer;
+}
+
+.nav button:hover,.nav button.active{
+background:#191b27;
+color:white;
+}
+
+.main{
+margin-left:245px;
+width:calc(100% - 245px);
+padding:28px;
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.title h1{
+font-size:28px;
+margin-bottom:7px;
+}
+
+.title p{color:var(--muted)}
+
+.profile{
+background:var(--panel);
+border:1px solid var(--line);
+padding:10px 15px;
+border-radius:12px;
+}
+
+.page{display:none}
+.page.active{display:block}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px;
+margin-bottom:25px;
+}
+
+.card{
+background:var(--panel);
+border:1px solid var(--line);
+border-radius:16px;
+padding:20px;
+}
+
+.card small{color:var(--muted)}
+.card h2{margin-top:10px;font-size:28px}
+
+.grid{
+display:grid;
+grid-template-columns:1.4fr 1fr;
+gap:18px;
+}
+
+.panel{
+background:var(--panel);
+border:1px solid var(--line);
+border-radius:17px;
+padding:22px;
+margin-bottom:18px;
+}
+
+.panel h3{
+margin-bottom:18px;
+}
+
+.form{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
+}
+
+label{
+font-size:13px;
+color:var(--muted);
+display:block;
+margin-bottom:7px;
+}
+
+input,select,textarea{
+width:100%;
+background:#090b11;
+border:1px solid var(--line);
+color:white;
+padding:12px;
+border-radius:10px;
+outline:none;
+}
+
+input:focus,select:focus,textarea:focus{
+border-color:var(--primary);
+}
+
+textarea{
+min-height:150px;
+resize:vertical;
+}
+
+.btn{
+border:0;
+padding:12px 18px;
+border-radius:10px;
+cursor:pointer;
+font-weight:700;
+color:white;
+background:linear-gradient(135deg,var(--primary),var(--primary2));
+}
+
+.btn.secondary{
+background:#202330;
+}
+
+.btn.full{width:100%;margin-top:15px}
+
+.opportunity{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px 0;
+border-bottom:1px solid var(--line);
+}
+
+.opportunity:last-child{border-bottom:0}
+
+.badge{
+padding:6px 9px;
+border-radius:8px;
+font-size:12px;
+font-weight:bold;
+background:#12351f;
+color:#4ade80;
+}
+
+.score{
+font-size:25px;
+font-weight:800;
+color:#a78bfa;
+}
+
+.idea{
+background:#0b0d14;
+border:1px solid var(--line);
+border-radius:13px;
+padding:15px;
+margin-top:12px;
+}
+
+.idea strong{display:block;margin-bottom:6px}
+
+.tags{
+display:flex;
+flex-wrap:wrap;
+gap:7px;
+margin-top:10px;
+}
+
+.tag{
+background:#1d2030;
+color:#b9bdf0;
+padding:6px 9px;
+border-radius:7px;
+font-size:12px;
+}
+
+.empty{
+text-align:center;
+padding:45px 15px;
+color:var(--muted);
+}
+
+.mobileMenu{display:none}
+
+@media(max-width:850px){
+.sidebar{
+transform:translateX(-100%);
+z-index:20;
+transition:.25s;
+}
+
+.sidebar.open{transform:translateX(0)}
+
+.main{
+margin-left:0;
+width:100%;
+padding:18px;
+}
+
+.mobileMenu{
+display:block;
+background:#171925;
+border:1px solid var(--line);
+color:white;
+padding:9px 12px;
+border-radius:9px;
+}
+
+.cards{
+grid-template-columns:repeat(2,1fr);
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.form{
+grid-template-columns:1fr;
+}
+
+.top{
+gap:15px;
+}
+
+.profile{display:none}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<aside class="sidebar" id="sidebar">
+
+<div class="logo">
+<div class="logoIcon">✦</div>
+TrendForge AI
+</div>
+
+<div class="nav">
+<button class="active" onclick="showPage('dashboard',this)">▦ Dashboard</button>
+<button onclick="showPage('radar',this)">◉ Radar Global</button>
+<button onclick="showPage('analyzer',this)">⌕ Analizador</button>
+<button onclick="showPage('studio',this)">✦ AI Studio</button>
+<button onclick="showPage('projects',this)">▣ Mis proyectos</button>
+<button onclick="showPage('settings',this)">⚙ Configuración</button>
+</div>
+
+</aside>
+
+<main class="main">
+
+<div class="top">
+<button class="mobileMenu" onclick="toggleMenu()">☰</button>
+
+<div class="title">
+<h1 id="pageTitle">Dashboard</h1>
+<p>Encuentra oportunidades y conviértelas en contenido.</p>
+</div>
+
+<div class="profile">● Andrés</div>
+</div>
+
+<!-- DASHBOARD -->
+
+<section class="page active" id="dashboard">
+
+<div class="cards">
+
+<div class="card">
+<small>Oportunidades detectadas</small>
+<h2>128</h2>
+</div>
+
+<div class="card">
+<small>Tendencias activas</small>
+<h2>43</h2>
+</div>
+
+<div class="card">
+<small>Potencial promedio</small>
+<h2>87%</h2>
+</div>
+
+<div class="card">
+<small>Proyectos creados</small>
+<h2 id="projectCount">0</h2>
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="panel">
+<h3>🔥 Oportunidades destacadas</h3>
+
+<div class="opportunity">
+<div>
+<strong>Historias de animales misteriosas</strong>
+<div class="tags">
+<span class="tag">Infantil</span>
+<span class="tag">Misterio</span>
+<span class="tag">Animales</span>
+</div>
+</div>
+<div class="score">94</div>
+</div>
+
+<div class="opportunity">
+<div>
+<strong>Experimentos para niños</strong>
+<div class="tags">
+<span class="tag">Educación</span>
+<span class="tag">Curiosidad</span>
+</div>
+</div>
+<div class="score">91</div>
+</div>
+
+<div class="opportunity">
+<div>
+<strong>Historias de supervivencia</strong>
+<div class="tags">
+<span class="tag">Aventura</span>
+<span class="tag">Emoción</span>
+</div>
+</div>
+<div class="score">88</div>
+</div>
+
+</div>
+
+<div class="panel">
+<h3>🌎 Radar actual</h3>
+<p style="color:var(--muted);margin-bottom:15px">
+Compara mercados para encontrar temas con potencial.
+</p>
+
+<button class="btn full" onclick="showPage('radar')">
+Abrir Radar Global →
+</button>
+</div>
+
+</div>
+
+</section>
+
+<!-- RADAR -->
+
+<section class="page" id="radar">
+
+<div class="panel">
+
+<h3>🌎 Radar Global de Oportunidades</h3>
+
+<div class="form">
+
+<div>
+<label>País de origen</label>
+<select id="origin">
+<option>Estados Unidos</option>
+<option>México</option>
+<option>España</option>
+<option>Brasil</option>
+<option>Japón</option>
+<option>Corea del Sur</option>
+</select>
+</div>
+
+<div>
+<label>País objetivo</label>
+<select id="target">
+<option>Colombia</option>
+<option>México</option>
+<option>España</option>
+<option>Argentina</option>
+<option>Chile</option>
+<option>Perú</option>
+</select>
+</div>
+
+<div>
+<label>Plataforma</label>
+<select id="platform">
+<option>YouTube</option>
+<option>TikTok</option>
+<option>Facebook</option>
+</select>
+</div>
+
+</div>
+
+<button class="btn full" onclick="runRadar()">🔎 Buscar oportunidades</button>
+
+<div id="radarResult"></div>
+
+</div>
+
+</section>
+
+<!-- ANALYZER -->
+
+<section class="page" id="analyzer">
+
+<div class="panel">
+
+<h3>⌕ Analizador de tendencias</h3>
+
+<label>Introduce un tema, título o concepto</label>
+
+<input id="trendInput"
+placeholder="Ejemplo: historias de animales misteriosas">
+
+<button class="btn full" onclick="analyzeTrend()">
+✦ Analizar con TrendForge
+</button>
+
+<div id="analysisResult"></div>
+
+</div>
+
+</section>
+
+<!-- STUDIO -->
+
+<section class="page" id="studio">
+
+<div class="panel">
+
+<h3>✦ AI Story Studio</h3>
+
+<label>Tema de la historia</label>
+
+<input id="storyTopic"
+placeholder="Ejemplo: un niño encuentra una puerta secreta">
+
+<label style="margin-top:15px">Estilo</label>
+
+<select id="storyStyle">
+<option>Aventura y misterio</option>
+<option>Infantil educativo</option>
+<option>Terror suave</option>
+<option>Emocional</option>
+<option>Comedia</option>
+</select>
+
+<button class="btn full" onclick="generateStory()">
+✨ Generar concepto y guion
+</button>
+
+<div id="storyResult"></div>
+
+</div>
+
+</section>
+
+<!-- PROJECTS -->
+
+<section class="page" id="projects">
+
+<div class="panel">
+
+<h3>▣ Mis proyectos</h3>
+
+<div id="projectsList" class="empty">
+Todavía no tienes proyectos guardados.
+</div>
+
+</div>
+
+</section>
+
+<!-- SETTINGS -->
+
+<section class="page" id="settings">
+
+<div class="panel">
+
+<h3>⚙ Configuración</h3>
+
+<label>Nombre del creador</label>
+<input value="Andrés">
+
+<label style="margin-top:15px">Idioma principal</label>
+<select>
+<option>Español</option>
+<option>Inglés</option>
+<option>Portugués</option>
+</select>
+
+<button class="btn full" onclick="alert('Configuración guardada')">
+Guardar configuración
+</button>
+
+</div>
+
+</section>
+
+</main>
+</div>
+
+<script>
+
+let projects=[];
+
+function toggleMenu(){
+document.getElementById('sidebar').classList.toggle('open');
+}
+
+function showPage(page,button){
+
+document.querySelectorAll('.page').forEach(p=>{
+p.classList.remove('active');
+});
+
+document.getElementById(page).classList.add('active');
+
+document.querySelectorAll('.nav button').forEach(b=>{
+b.classList.remove('active');
+});
+
+if(button) button.classList.add('active');
+
+const titles={
+dashboard:'Dashboard',
+radar:'Radar Global',
+analyzer:'Analizador',
+studio:'AI Studio',
+projects:'Mis proyectos',
+settings:'Configuración'
+};
+
+document.getElementById('pageTitle').textContent=titles[page];
+
+document.getElementById('sidebar').classList.remove('open');
+}
+
+function runRadar(){
+
+const origin=document.getElementById('origin').value;
+const target=document.getElementById('target').value;
+const platform=document.getElementById('platform').value;
+
+const opportunities=[
+['Historias de animales misteriosas',94,'Alta demanda','Competencia media'],
+['Aventuras de pequeños exploradores',91,'Crecimiento alto','Competencia baja'],
+['Historias educativas con misterio',89,'Buen potencial','Competencia media'],
+['Animales con poderes especiales',86,'Tendencia creciente','Competencia media']
+];
+
+let html=`
+<div class="idea">
+<strong>🌎 ${origin} → ${target} · ${platform}</strong>
+<p style="color:var(--muted);margin-top:5px">
+Oportunidades potenciales encontradas:
+</p>
+</div>`;
+
+opportunities.forEach(o=>{
+html+=`
+<div class="opportunity">
+<div>
+<strong>${o[0]}</strong>
+<p style="color:var(--muted);margin-top:
