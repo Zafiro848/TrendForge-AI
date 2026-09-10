@@ -611,48 +611,101 @@ document.getElementById('pageTitle').textContent=titles[page];
 document.getElementById('sidebar').classList.remove('open');
 }
 
-function runRadar(){
+async function runRadar() {
+  const origin = document.getElementById('origin').value;
+  const target = document.getElementById('target').value;
+  const platform = document.getElementById('platform').value;
+  const result = document.getElementById('radarResult');
 
-const origin=document.getElementById('origin').value;
-const target=document.getElementById('target').value;
-const platform=document.getElementById('platform').value;
+  if (platform !== 'YouTube') {
+    result.innerHTML = `
+      <div class="idea">
+        <strong>Próximamente</strong>
+        <p>Por ahora el Radar con datos reales está conectado a YouTube.</p>
+      </div>
+    `;
+    return;
+  }
 
-const opportunities=[
-['Historias de animales misteriosas',94,'Alta demanda','Competencia media'],
-['Aventuras de pequeños exploradores',91,'Crecimiento alto','Competencia baja'],
-['Historias educativas con misterio',89,'Buen potencial','Competencia media'],
-['Animales con poderes especiales',86,'Tendencia creciente','Competencia media']
-];
+  const countryCodes = {
+    "Estados Unidos": "US",
+    "México": "MX",
+    "Colombia": "CO",
+    "Brasil": "BR",
+    "Argentina": "AR",
+    "España": "ES",
+    "Perú": "PE",
+    "Chile": "CL"
+  };
 
-let html=`
-<div class="idea">
-<strong>🌎 ${origin} → ${target} · ${platform}</strong>
-<p style="color:var(--muted);margin-top:5px">
-Oportunidades potenciales encontradas:
-</p>
-</div>`;
+  const region = countryCodes[origin] || "US";
 
-opportunities.forEach(o=>{
-html+=`
-<div class="opportunity">
-<div>
-<strong>${o[0]}</strong>
-<p style="color:var(--muted);margin-top:
-<p style="color:var(--muted);margin-top:5px">
-${o[2]} · ${o[3]}
-</p>
-</div>
+  result.innerHTML = `
+    <div class="idea">
+      <strong>🔎 Analizando YouTube...</strong>
+      <p>Buscando datos reales de ${origin}.</p>
+    </div>
+  `;
 
-<div>
-<div class="score">${o[1]}</div>
-<span class="badge">Oportunidad</span>
-</div>
-</div>`;
-});
+  try {
+    const response = await fetch(
+      `/api/youtube?q=${encodeURIComponent("tendencias")}&region=${region}`
+    );
 
-document.getElementById('radarResult').innerHTML=html;
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || "No se pudo consultar YouTube");
+    }
+
+    if (!data.resultados || data.resultados.length === 0) {
+      result.innerHTML = `
+        <div class="idea">
+          <strong>Sin resultados</strong>
+          <p>YouTube no devolvió resultados.</p>
+        </div>
+      `;
+      return;
+             }
+
+    let html = `
+      <div class="idea">
+        <strong>🌎 ${origin} → ${target} · YouTube</strong>
+        <p>Resultados reales encontrados en YouTube:</p>
+      </div>
+    `;
+
+    data.resultados.forEach(video => {
+      const titulo = video.snippet?.title || "Sin título";
+      const canal = video.snippet?.channelTitle || "Canal desconocido";
+      const fecha = video.snippet?.publishedAt
+        ? new Date(video.snippet.publishedAt).toLocaleDateString()
+        : "";
+
+      html += `
+        <div class="opportunity">
+          <div>
+            <strong>${titulo}</strong>
+            <p style="color:var(--muted);margin-top:5px">
+              ${canal} · ${fecha}
+            </p>
+          </div>
+          <span class="badge">YouTube</span>
+        </div>
+      `;
+    });
+
+    result.innerHTML = html;
+
+  } catch (error) {
+    result.innerHTML = `
+      <div class="idea">
+        <strong>⚠️ Error consultando YouTube</strong>
+        <p>${error.message}</p>
+      </div>
+    `;
+  }
 }
-
 function analyzeTrend(){
 
 const topic=document.getElementById('trendInput').value.trim();
