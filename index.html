@@ -1064,6 +1064,27 @@ zafiroClient.auth.onAuthStateChange(function(){
 
 revisarSesion();
 
+zafiroClient.auth.onAuthStateChange(async (event) => {
+  if (event === "PASSWORD_RECOVERY") {
+    const nueva = prompt("Escribe tu nueva contraseña:");
+
+    if (!nueva || nueva.length < 8) {
+      alert("La contraseña debe tener mínimo 8 caracteres.");
+      return;
+    }
+
+    const { error } = await zafiroClient.auth.updateUser({
+      password: nueva
+    });
+
+    if (error) {
+      alert("Error: " + error.message);
+    } else {
+      alert("Contraseña cambiada correctamente.");
+    }
+  }
+});     
+
 </script>
 </body>
 </html>
