@@ -788,6 +788,282 @@ alert('Proyecto guardado correctamente.');
 }
 
 </script>
+<!-- =========================================
+     LABORATORIO ZAFIRO NET - ACCESO PRIVADO
+========================================= -->
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body:not(.zafiro-auth) .app{
+  display:none !important;
+}
+
+#zafiroLogin{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:
+    radial-gradient(circle at 50% 10%, #25134f 0%, #0b0d18 38%, #05060a 75%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+}
+
+.zafiro-card{
+  width:100%;
+  max-width:400px;
+  padding:30px 24px;
+  border-radius:22px;
+  background:#10121a;
+  border:1px solid #292d3a;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+
+.zafiro-logo{
+  width:60px;
+  height:60px;
+  margin:0 auto 18px;
+  display:grid;
+  place-items:center;
+  border-radius:18px;
+  font-size:28px;
+  background:linear-gradient(135deg,#6366f1,#a855f7);
+  box-shadow:0 0 40px rgba(139,92,246,.35);
+}
+
+.zafiro-card h1{
+  text-align:center;
+  font-size:26px;
+  margin:0 0 5px;
+}
+
+.zafiro-subtitle{
+  text-align:center;
+  color:#8d93a5;
+  font-size:13px;
+  margin-bottom:25px;
+}
+
+.zafiro-card label{
+  display:block;
+  color:#a5abba;
+  font-size:12px;
+  margin:15px 0 7px;
+}
+
+.zafiro-card input{
+  width:100%;
+  padding:13px;
+  color:white;
+  background:#090b11;
+  border:1px solid #2c3040;
+  border-radius:10px;
+  outline:none;
+}
+
+.zafiro-card input:focus{
+  border-color:#8b5cf6;
+}
+
+#zafiroLoginBtn{
+  width:100%;
+  margin-top:20px;
+  padding:13px;
+  border:0;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:800;
+  color:white;
+  background:linear-gradient(135deg,#8b5cf6,#6366f1);
+}
+
+#zafiroError{
+  min-height:20px;
+  margin-top:12px;
+  text-align:center;
+  color:#fb7185;
+  font-size:12px;
+}
+
+#zafiroLogout{
+  position:fixed;
+  right:15px;
+  bottom:15px;
+  z-index:9000;
+  padding:10px 13px;
+  border-radius:10px;
+  border:1px solid #343849;
+  color:white;
+  background:#11141d;
+  display:none;
+  cursor:pointer;
+}
+</style>
+
+<div id="zafiroLogin">
+
+  <div class="zafiro-card">
+
+    <div class="zafiro-logo">◆</div>
+
+    <h1>Laboratorio Zafiro Net</h1>
+
+    <div class="zafiro-subtitle">
+      Acceso privado
+    </div>
+
+    <form id="zafiroLoginForm">
+
+      <label>Correo electrónico</label>
+
+      <input
+        id="zafiroEmail"
+        type="email"
+        autocomplete="email"
+        required
+      >
+
+      <label>Contraseña</label>
+
+      <input
+        id="zafiroPassword"
+        type="password"
+        autocomplete="current-password"
+        required
+      >
+
+      <button id="zafiroLoginBtn" type="submit">
+        INICIAR SESIÓN
+      </button>
+
+      <div id="zafiroError"></div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<button id="zafiroLogout">
+  Cerrar sesión
+</button>
+
+<script>
+
+const ZAFIRO_URL =
+  "PEGA_AQUI_LA_URL_DE_SUPABASE";
+
+const ZAFIRO_KEY =
+  "PEGA_AQUI_LA_PUBLISHABLE_KEY";
+
+const zafiroClient =
+  window.supabase.createClient(
+    ZAFIRO_URL,
+    ZAFIRO_KEY
+  );
+
+const zafiroLogin =
+  document.getElementById("zafiroLogin");
+
+const zafiroLogout =
+  document.getElementById("zafiroLogout");
+
+const zafiroError =
+  document.getElementById("zafiroError");
+
+
+async function revisarSesion(){
+
+  const {
+    data: { session }
+  } = await zafiroClient.auth.getSession();
+
+  if(session){
+
+    document.body.classList.add("zafiro-auth");
+
+    zafiroLogin.style.display="none";
+
+    zafiroLogout.style.display="block";
+
+  }else{
+
+    document.body.classList.remove("zafiro-auth");
+
+    zafiroLogin.style.display="flex";
+
+    zafiroLogout.style.display="none";
+
+  }
+
+}
+
+
+document
+.getElementById("zafiroLoginForm")
+.addEventListener("submit", async function(e){
+
+  e.preventDefault();
+
+  zafiroError.textContent="";
+
+  const email =
+    document.getElementById("zafiroEmail").value.trim();
+
+  const password =
+    document.getElementById("zafiroPassword").value;
+
+  const btn =
+    document.getElementById("zafiroLoginBtn");
+
+  btn.disabled=true;
+  btn.textContent="VERIFICANDO...";
+
+  const { error } =
+    await zafiroClient.auth.signInWithPassword({
+      email:email,
+      password:password
+    });
+
+  btn.disabled=false;
+  btn.textContent="INICIAR SESIÓN";
+
+  if(error){
+
+    zafiroError.textContent=
+      "Correo o contraseña incorrectos.";
+
+    return;
+
+  }
+
+  document.getElementById("zafiroPassword").value="";
+
+  await revisarSesion();
+
+});
+
+
+zafiroLogout.addEventListener("click", async function(){
+
+  await zafiroClient.auth.signOut();
+
+  await revisarSesion();
+
+});
+
+
+zafiroClient.auth.onAuthStateChange(function(){
+
+  revisarSesion();
+
+});
+
+
+revisarSesion();
+
+</script>
 </body>
 </html>
