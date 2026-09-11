@@ -705,6 +705,8 @@ async function runRadar() {
 
       const score = Number(video.score || 0);
       const nivel = video.nivel || "Sin clasificar";
+      const adaptabilidad = Number(video.adaptabilidadScore || 0);
+const motivo = video.motivo || "Sin análisis disponible.";
 
       html += `
         <div class="opportunity">
@@ -726,6 +728,13 @@ async function runRadar() {
             <p style="margin-top:8px">
               <strong>${nivel}</strong>
             </p>
+            <p style="color:var(--muted);margin-top:6px">
+  🧩 Potencial de adaptación: ${adaptabilidad}/10
+</p>
+
+<p style="color:var(--muted);margin-top:6px">
+  💡 ${motivo}
+</p>
           </div>
 
           <div style="text-align:center;min-width:65px">
