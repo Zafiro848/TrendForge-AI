@@ -156,9 +156,8 @@ const resultados = base
       palabra => texto.includes(palabra)
     ).length;
 
-    const adaptabilidadScore =
-      Math.min(coincidencias * 3, 10);
-
+    let adaptabilidadScore =
+  Math.min(coincidencias * 3, 10);
     // Penalizar contenido muy dependiente de marcas,
     // trailers oficiales o grandes lanzamientos
     const palabrasDependientes = [
@@ -174,7 +173,9 @@ const resultados = base
       palabrasDependientes.some(
         palabra => texto.includes(palabra)
       );
-
+if (dependiente) {
+  adaptabilidadScore = Math.min(adaptabilidadScore, 2);
+}
     const penalizacionDependencia =
       dependiente ? 10 : 0;
 
