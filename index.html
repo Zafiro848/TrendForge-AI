@@ -635,7 +635,9 @@ async function runRadar() {
     "Argentina": "AR",
     "España": "ES",
     "Perú": "PE",
-    "Chile": "CL"
+    "Chile": "CL",
+    "Japón": "JP",
+    "Corea del Sur": "KR"
   };
 
   const region = countryCodes[origin] || "US";
@@ -643,54 +645,93 @@ async function runRadar() {
   result.innerHTML = `
     <div class="idea">
       <strong>🔎 Analizando YouTube...</strong>
-      <p>Buscando datos reales de ${origin}.</p>
+      <p>Buscando tendencias reales de ${origin}.</p>
     </div>
   `;
 
   try {
     const response = await fetch(
-      `/api/youtube?q=${encodeURIComponent("tendencias")}&region=${region}`
+      `/api/youtube?q=${encodeURIComponent("tendencias")}&region=${encodeURIComponent(region)}`
     );
 
     const data = await response.json();
 
     if (!response.ok || !data.ok) {
-      throw new Error(data.error || "No se pudo consultar YouTube");
+      throw new Error(
+        data.error || "No se pudo consultar YouTube"
+      );
     }
 
-    if (!data.resultados || data.resultados.length === 0) {
+    if (!Array.isArray(data.resultados) || data.resultados.length === 0) {
       result.innerHTML = `
         <div class="idea">
           <strong>Sin resultados</strong>
-          <p>YouTube no devolvió resultados.</p>
+          <p>YouTube no devolvió resultados para ${origin}.</p>
         </div>
       `;
       return;
-             }
+    }
 
     let html = `
       <div class="idea">
         <strong>🌎 ${origin} → ${target} · YouTube</strong>
-        <p>Resultados reales encontrados en YouTube:</p>
+        <p>🔥 Tendencias detectadas con estadísticas reales:</p>
       </div>
     `;
 
     data.resultados.forEach(video => {
-      const titulo = video.snippet?.title || "Sin título";
-      const canal = video.snippet?.channelTitle || "Canal desconocido";
-      const fecha = video.snippet?.publishedAt
-        ? new Date(video.snippet.publishedAt).toLocaleDateString()
+      const titulo = video.titulo || "Sin título";
+      const canal = video.canal || "Canal desconocido";
+
+      const fecha = video.publicado
+        ? new Date(video.publicado).toLocaleDateString('es-CO')
         : "";
+
+      const vistas = Number(
+        video.views || 0
+      ).toLocaleString('es-CO');
+
+      const likes = Number(
+        video.likes || 0
+      ).toLocaleString('es-CO');
+
+      const comentarios = Number(
+        video.comments || 0
+      ).toLocaleString('es-CO');
+
+      const vistasDia = Math.round(
+        Number(video.viewsPerDay || 0)
+      ).toLocaleString('es-CO');
+
+      const score = Number(video.score || 0);
+      const nivel = video.nivel || "Sin clasificar";
 
       html += `
         <div class="opportunity">
           <div>
             <strong>${titulo}</strong>
+
             <p style="color:var(--muted);margin-top:5px">
-              ${canal} · ${fecha}
+              ${canal}${fecha ? ' · ' + fecha : ''}
+            </p>
+
+            <p style="color:var(--muted);margin-top:7px">
+              👁️ ${vistas} vistas · 👍 ${likes} · 💬 ${comentarios}
+            </p>
+
+            <p style="color:var(--muted);margin-top:5px">
+              ⚡ ${vistasDia} vistas/día
+            </p>
+
+            <p style="margin-top:8px">
+              <strong>${nivel}</strong>
             </p>
           </div>
-          <span class="badge">YouTube</span>
+
+          <div style="text-align:center;min-width:65px">
+            <div class="score">${score}</div>
+            <span class="badge">YouTube</span>
+          </div>
         </div>
       `;
     });
@@ -698,6 +739,8 @@ async function runRadar() {
     result.innerHTML = html;
 
   } catch (error) {
+    console.error("Error Radar:", error);
+
     result.innerHTML = `
       <div class="idea">
         <strong>⚠️ Error consultando YouTube</strong>
@@ -706,8 +749,8 @@ async function runRadar() {
     `;
   }
 }
-function analyzeTrend(){
 
+function analyzeTrend(){
 const topic=document.getElementById('trendInput').value.trim();
 
 if(!topic){
