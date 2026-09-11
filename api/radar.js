@@ -105,55 +105,133 @@ export default async function handler(req, res) {
       ...base.map(video => video.views)
     );
 
-    // 4. Calcular puntuación de oportunidad
-    const resultados = base
-      .map(video => {
-        const velocidadScore =
-          (video.viewsPerDay / maxViewsPerDay) * 45;
+    // 4. Calcular puntuación de oportunidad V2
+const resultados = base
+  .map(video => {
+    const velocidadScore =
+      (video.viewsPerDay / maxViewsPerDay) * 35;
 
-        const alcanceScore =
-          (video.views / maxViews) * 20;
+    const alcanceScore =
+      (video.views / maxViews) * 15;
 
-        const engagementScore =
-          Math.min(video.engagement / 10, 1) * 20;
+    const engagementScore =
+      Math.min(video.engagement / 10, 1) * 20;
 
-        const freshnessScore =
-          Math.max(
-            0,
-            Math.min(15, 15 - video.ageDays * 0.25)
-          );
+    const freshnessScore =
+      Math.max(
+        0,
+        Math.min(15, 15 - video.ageDays * 0.25)
+      );
 
-        const score = Math.round(
-          Math.min(
-            100,
-            velocidadScore +
-              alcanceScore +
-              engagementScore +
-              freshnessScore
-          )
-        );
+    // Detectar señales de contenido fácil de adaptar
+    const texto =
+      `${video.titulo} ${video.descripcion}`.toLowerCase();
 
-        let nivel;
+    const palabrasAdaptables = [
+      "how",
+      "why",
+      "story",
+      "stories",
+      "challenge",
+      "experiment",
+      "tips",
+      "ranking",
+      "top",
+      "best",
+      "worst",
+      "mystery",
+      "facts",
+      "secret",
+      "viral",
+      "trend",
+      "trending",
+      "curious",
+      "review",
+      "before",
+      "after",
+      "vs"
+    ];
 
-        if (score >= 85) {
-          nivel = "🔥 Viral ahora";
-        } else if (score >= 70) {
-          nivel = "📈 Creciendo";
-        } else if (score >= 55) {
-          nivel = "🟡 Potencial medio";
-        } else {
-          nivel = "⚪ Bajo impulso";
-        }
+    const coincidencias = palabrasAdaptables.filter(
+      palabra => texto.includes(palabra)
+    ).length;
 
-        return {
-          ...video,
-          score,
-          nivel,
-          url: `https://www.youtube.com/watch?v=${video.id}`
-        };
-      })
-      .sort((a, b) => b.score - a.score);
+    const adaptabilidadScore =
+      Math.min(coincidencias * 3, 10);
 
+    // Penalizar contenido muy dependiente de marcas,
+    // trailers oficiales o grandes lanzamientos
+    const palabrasDependientes = [
+      "official trailer",
+      "official music video",
+      "official mv",
+      "nintendo direct",
+      "movie trailer",
+      "teaser trailer"
+    ];
+
+    const dependiente =
+      palabrasDependientes.some(
+        palabra => texto.includes(palabra)
+      );
+
+    const penalizacionDependencia =
+      dependiente ? 10 : 0;
+
+    const score = Math.round(
+      Math.max(
+        0,
+        Math.min(
+          100,
+          velocidadScore +
+            alcanceScore +
+            engagementScore +
+            freshnessScore +
+            adaptabilidadScore -
+            penalizacionDependencia
+        )
+      )
+    );
+
+    let nivel;
+
+    if (score >= 85) {
+      nivel = "🔥 Oportunidad muy alta";
+    } else if (score >= 70) {
+      nivel = "📈 Buena oportunidad";
+    } else if (score >= 55) {
+      nivel = "🟡 Potencial de adaptación";
+    } else {
+      nivel = "⚪ Baja prioridad";
+    }
+
+    let motivo = "Buen desempeño general.";
+
+    if (dependiente) {
+      motivo =
+        "Tiene alto alcance, pero depende mucho de una marca, estreno o contenido oficial.";
+    } else if (adaptabilidadScore >= 6 && video.viewsPerDay > 100000) {
+      motivo =
+        "Combina velocidad de crecimiento con un formato que puede adaptarse a otro mercado.";
+    } else if (video.engagement >= 5) {
+      motivo =
+        "La audiencia está reaccionando bien y muestra buena interacción.";
+    } else if (video.ageDays <= 3 && video.viewsPerDay > 50000) {
+      motivo =
+        "Es reciente y está creciendo rápido, por lo que conviene vigilarlo.";
+    }
+
+    return {
+      ...video,
+      score,
+      nivel,
+      adaptabilidadScore,
+      dependiente,
+      motivo,
+      url: `https://www.youtube.com/watch?v=${video.id}`
+    };
+  })
+  .sort((a, b) => b.score - a.score);
     // 5. Respuesta del nuevo Radar
     return res.status(200).json({
       ok: true,
