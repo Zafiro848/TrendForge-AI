@@ -195,15 +195,17 @@ const resultados = base
 
     let nivel;
 
-    if (score >= 85) {
-      nivel = "🔥 Oportunidad muy alta";
-    } else if (score >= 70) {
-      nivel = "📈 Buena oportunidad";
-    } else if (score >= 55) {
-      nivel = "🟡 Potencial de adaptación";
-    } else {
-      nivel = "⚪ Baja prioridad";
-    }
+if (dependiente) {
+  nivel = "⛔ Dependiente de marca";
+} else if (score >= 85) {
+  nivel = "🔥 Oportunidad muy alta";
+} else if (score >= 70) {
+  nivel = "📈 Buena oportunidad";
+} else if (score >= 55) {
+  nivel = "🟡 Potencial de adaptación";
+} else {
+  nivel = "⚪ Baja prioridad";
+}
 
     let motivo = "Buen desempeño general.";
 
