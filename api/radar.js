@@ -151,7 +151,45 @@ const resultados = base
       "after",
       "vs"
     ];
+let formato = "Contenido general";
 
+if (texto.includes("mystery") || texto.includes("secret")) {
+  formato = "Misterio / descubrimiento";
+} else if (texto.includes("challenge")) {
+  formato = "Reto / desafío";
+} else if (texto.includes("experiment")) {
+  formato = "Experimento";
+} else if (texto.includes("review")) {
+  formato = "Review / análisis";
+} else if (
+  texto.includes("before") ||
+  texto.includes("after")
+) {
+  formato = "Transformación / antes y después";
+} else if (
+  texto.includes("vs") ||
+  texto.includes("best") ||
+  texto.includes("worst") ||
+  texto.includes("ranking") ||
+  texto.includes("top")
+) {
+  formato = "Comparación / ranking";
+} else if (
+  texto.includes("facts") ||
+  texto.includes("curious")
+) {
+  formato = "Curiosidades / datos";
+} else if (
+  texto.includes("story") ||
+  texto.includes("stories")
+) {
+  formato = "Historia / narración";
+} else if (
+  texto.includes("how") ||
+  texto.includes("why")
+) {
+  formato = "Explicativo";
+}
     const coincidencias = palabrasAdaptables.filter(
       palabra => texto.includes(palabra)
     ).length;
@@ -228,6 +266,7 @@ if (dependiente) {
       ...video,
       score,
       nivel,
+      formato,
       adaptabilidadScore,
       dependiente,
       motivo,
