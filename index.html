@@ -651,8 +651,8 @@ async function runRadar() {
 
   try {
     const response = await fetch(
-      `/api/youtube?q=${encodeURIComponent("tendencias")}&region=${encodeURIComponent(region)}`
-    );
+  `/api/radar?region=${encodeURIComponent(region)}`
+);
 
     const data = await response.json();
 
