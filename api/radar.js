@@ -348,6 +348,51 @@ let tema = "Tema general";
 ].some(palabra => texto.includes(palabra))) {
   tema = "Animales / naturaleza";
     }
+    if ([
+  "science",
+  "scientist",
+  "scientific",
+  "discovery",
+  "research",
+  "physics",
+  "biology",
+  "space",
+  "nasa",
+  "ciencia",
+  "científico",
+  "cientifico",
+  "descubrimiento",
+  "investigación",
+  "investigacion",
+  "física",
+  "fisica",
+  "biología",
+  "biologia",
+  "espacio",
+  "ciência",
+  "cientista",
+  "descoberta",
+  "pesquisa",
+  "física",
+  "biologia",
+  "espaço",
+  "科学",
+  "研究",
+  "発見",
+  "宇宙",
+  "物理",
+  "生物",
+  "发现",
+  "發現",
+  "과학",
+  "연구",
+  "발견",
+  "우주",
+  "물리",
+  "생물"
+].some(palabra => texto.includes(palabra))) {
+  tema = "Ciencia / descubrimientos";
+    }
 if ([
   "mystery",
   "secret",
