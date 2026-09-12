@@ -393,6 +393,51 @@ let tema = "Tema general";
 ].some(palabra => texto.includes(palabra))) {
   tema = "Ciencia / descubrimientos";
     }
+    if ([
+  "vehicle",
+  "vehicles",
+  "automotive",
+  "cars",
+  "motorcycle",
+  "motorcycles",
+  "supercar",
+  "engine",
+  "carro",
+  "carros",
+  "vehículo",
+  "vehiculo",
+  "vehículos",
+  "vehiculos",
+  "automóvil",
+  "automovil",
+  "moto",
+  "motos",
+  "motocicleta",
+  "motor",
+  "veículo",
+  "veiculo",
+  "veículos",
+  "veiculos",
+  "carros",
+  "motos",
+  "自動車",
+  "車",
+  "バイク",
+  "オートバイ",
+  "エンジン",
+  "汽车",
+  "汽車",
+  "摩托车",
+  "摩托車",
+  "发动机",
+  "發動機",
+  "자동차",
+  "차량",
+  "오토바이",
+  "엔진"
+].some(palabra => texto.includes(palabra))) {
+  tema = "Vehículos / motor";
+    }
 if ([
   "mystery",
   "secret",
