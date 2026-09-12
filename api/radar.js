@@ -1302,6 +1302,7 @@ if (dependiente) {
       score,
       nivel,
       formato,
+      tema,
       adaptabilidadScore,
       dependiente,
       motivo,
