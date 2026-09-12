@@ -153,41 +153,159 @@ const resultados = base
     ];
 let formato = "Contenido general";
 
-if (texto.includes("mystery") || texto.includes("secret")) {
+if ([
+  "mystery",
+  "secret",
+  "misterio",
+  "secreto",
+  "mistério",
+  "segredo",
+  "謎",
+  "秘密",
+  "神秘",
+  "미스터리",
+  "비밀"
+].some(palabra => texto.includes(palabra))) {
   formato = "Misterio / descubrimiento";
-} else if (texto.includes("challenge")) {
+} else if ([
+  "challenge",
+  "reto",
+  "desafío",
+  "desafio",
+  "desafio",
+  "チャレンジ",
+  "挑戦",
+  "挑战",
+  "도전"
+].some(palabra => texto.includes(palabra))) {
   formato = "Reto / desafío";
-} else if (texto.includes("experiment")) {
+} else if ([
+  "experiment",
+  "experimento",
+  "実験",
+  "实验",
+  "實驗",
+  "실험"
+].some(palabra => texto.includes(palabra))) {
   formato = "Experimento";
-} else if (texto.includes("review")) {
+} else if ([
+  "review",
+  "reseña",
+  "resena",
+  "análisis",
+  "analisis",
+  "avaliação",
+  "avaliacao",
+  "análise",
+  "analise",
+  "レビュー",
+  "評測",
+  "评测",
+  "評論",
+  "评论",
+  "리뷰"
+].some(palabra => texto.includes(palabra))) {
   formato = "Review / análisis";
-} else if (
-  texto.includes("before") ||
-  texto.includes("after")
-) {
+} else if ([
+  "before",
+  "after",
+  "antes",
+  "después",
+  "despues",
+  "antes e depois",
+  "antes y después",
+  "ビフォー",
+  "アフター",
+  "变身",
+  "改造前",
+  "改造后",
+  "改造後",
+  "전후"
+].some(palabra => texto.includes(palabra))) {
+
   formato = "Transformación / antes y después";
-} else if (
-  texto.includes("vs") ||
-  texto.includes("best") ||
-  texto.includes("worst") ||
-  texto.includes("ranking") ||
-  texto.includes("top")
-) {
+    } else if ([
+  "vs",
+  "best",
+  "worst",
+  "ranking",
+  "top",
+  "mejor",
+  "peor",
+  "comparación",
+  "comparacion",
+  "melhor",
+  "pior",
+  "comparação",
+  "comparacao",
+  "ランキング",
+  "比較",
+  "最強",
+  "排名",
+  "对比",
+  "比較",
+  "순위",
+  "비교"
+].some(palabra => texto.includes(palabra))) {
   formato = "Comparación / ranking";
-} else if (
-  texto.includes("facts") ||
-  texto.includes("curious")
-) {
+} else if ([
+  "facts",
+  "curious",
+  "curiosidad",
+  "curiosidades",
+  "datos",
+  "curioso",
+  "fatos",
+  "curiosidade",
+  "curiosidades",
+  "雑学",
+  "豆知識",
+  "冷知识",
+  "冷知識",
+  "事实",
+  "事實",
+  "상식",
+  "사실",
+  "호기심"
+].some(palabra => texto.includes(palabra))) {
+
   formato = "Curiosidades / datos";
-} else if (
-  texto.includes("story") ||
-  texto.includes("stories")
-) {
+} else if ([
+  "story",
+  "stories",
+  "historia",
+  "historias",
+  "relato",
+  "relatos",
+  "história",
+  "histórias",
+  "物語",
+  "ストーリー",
+  "故事",
+  "故事",
+  "이야기",
+  "사연"
+].some(palabra => texto.includes(palabra))) {
   formato = "Historia / narración";
-} else if (
-  texto.includes("how") ||
-  texto.includes("why")
-) {
+} else if ([
+  "how",
+  "how to",
+  "why",
+  "cómo",
+  "como hacer",
+  "por qué",
+  "como fazer",
+  "por que",
+  "なぜ",
+  "やり方",
+  "为什么",
+  "為什麼",
+  "如何",
+  "怎么",
+  "怎麼",
+  "왜",
+  "어떻게"
+].some(palabra => texto.includes(palabra))) {
   formato = "Explicativo";
 }
     const coincidencias = palabrasAdaptables.filter(
@@ -196,6 +314,9 @@ if (texto.includes("mystery") || texto.includes("secret")) {
 
     let adaptabilidadScore =
   Math.min(coincidencias * 3, 10);
+    if (formato !== "Contenido general") {
+  adaptabilidadScore = Math.max(adaptabilidadScore, 6);
+    }
     // Penalizar contenido muy dependiente de marcas,
     // trailers oficiales o grandes lanzamientos
     const palabrasDependientes = [
