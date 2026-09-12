@@ -705,6 +705,7 @@ async function runRadar() {
 
       const score = Number(video.score || 0);
       const nivel = video.nivel || "Sin clasificar";
+      const formato = video.formato || "Contenido general";
       const adaptabilidad = Number(video.adaptabilidadScore || 0);
 const motivo = video.motivo || "Sin análisis disponible.";
 
@@ -728,6 +729,9 @@ const motivo = video.motivo || "Sin análisis disponible.";
             <p style="margin-top:8px">
               <strong>${nivel}</strong>
             </p>
+            <p style="color:var(--muted);margin-top:6px">
+  🎬 Formato detectado: ${formato}
+</p>
             <p style="color:var(--muted);margin-top:6px">
   🧩 Potencial de adaptación: ${adaptabilidad}/10
 </p>
