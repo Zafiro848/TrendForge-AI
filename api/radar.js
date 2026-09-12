@@ -312,6 +312,42 @@ let tema = "Tema general";
 ].some(palabra => texto.includes(palabra))) {
   tema = "Misterio / crimen / casos extraños";
     }
+    if ([
+  "animal",
+  "animals",
+  "wildlife",
+  "nature",
+"dogs",
+"cats",
+"pets",
+  "mascota",
+  "mascotas",
+  "animales",
+  "naturaleza",
+  "perro",
+  "gato",
+  "fauna",
+  "animal",
+  "animais",
+  "natureza",
+  "cachorro",
+  "gato",
+  "動物",
+  "自然",
+  "犬",
+  "猫",
+  "动物",
+  "動物",
+  "自然",
+  "狗",
+  "猫",
+  "동물",
+  "자연",
+  "강아지",
+  "고양이"
+].some(palabra => texto.includes(palabra))) {
+  tema = "Animales / naturaleza";
+    }
 if ([
   "mystery",
   "secret",
