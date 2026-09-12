@@ -601,6 +601,40 @@ let tema = "Tema general";
 ].some(palabra => texto.includes(palabra))) {
   tema = "Deportes / competencias";
     }
+    if ([
+  "food",
+  "cooking",
+  "recipe",
+  "recipes",
+  "chef",
+  "restaurant",
+  "comida",
+  "cocina",
+  "receta",
+  "recetas",
+  "chef",
+  "restaurante",
+  "receita",
+  "receitas",
+  "cozinha",
+  "comida",
+  "restaurante",
+  "料理",
+  "レシピ",
+  "食べ物",
+  "グルメ",
+  "美食",
+  "食谱",
+  "食譜",
+  "烹饪",
+  "烹飪",
+  "음식",
+  "요리",
+  "레시피",
+  "맛집"
+].some(palabra => texto.includes(palabra))) {
+  tema = "Comida / cocina / recetas";
+    }
 if ([
   "mystery",
   "secret",
