@@ -152,7 +152,7 @@ const resultados = base
       "vs"
     ];
 let formato = "Contenido general";
-
+let tema = "Tema general";
 if ([
   "mystery",
   "secret",
