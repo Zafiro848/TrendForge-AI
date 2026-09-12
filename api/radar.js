@@ -153,6 +153,32 @@ const resultados = base
     ];
 let formato = "Contenido general";
 let tema = "Tema general";
+    if ([
+  "gaming",
+  "gameplay",
+  "video game",
+  "videogame",
+  "gamer",
+  "videojuego",
+  "videojuegos",
+  "juego",
+  "jogos",
+  "jogo",
+  "free fire",
+  "minecraft",
+  "fortnite",
+  "roblox",
+  "nintendo",
+  "playstation",
+  "xbox",
+  "ゲーム",
+  "ゲーム実況",
+  "游戏",
+  "遊戲",
+  "게임"
+].some(palabra => texto.includes(palabra))) {
+  tema = "Gaming / videojuegos";
+    }
 if ([
   "mystery",
   "secret",
