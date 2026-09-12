@@ -438,6 +438,52 @@ let tema = "Tema general";
 ].some(palabra => texto.includes(palabra))) {
   tema = "Vehículos / motor";
     }
+    if ([
+  "travel",
+  "trip",
+  "tourism",
+  "explore",
+  "exploring",
+  "exploration",
+  "destination",
+  "road trip",
+  "abandoned place",
+  "viaje",
+  "viajes",
+  "turismo",
+  "explorar",
+  "exploración",
+  "exploracion",
+  "destino",
+  "lugares abandonados",
+  "viagem",
+  "viagens",
+  "turismo",
+  "explorar",
+  "exploração",
+  "exploracao",
+  "destino",
+  "旅行",
+  "旅",
+  "観光",
+  "探索",
+  "廃墟",
+  "旅行",
+  "旅游",
+  "旅遊",
+  "探索",
+  "景点",
+  "景點",
+  "废墟",
+  "廢墟",
+  "여행",
+  "관광",
+  "탐험",
+  "탐방",
+  "폐허"
+].some(palabra => texto.includes(palabra))) {
+  tema = "Lugares / viajes / exploración";
+    }
 if ([
   "mystery",
   "secret",
