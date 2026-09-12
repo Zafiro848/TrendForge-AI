@@ -268,6 +268,50 @@ let tema = "Tema general";
 ].some(palabra => texto.includes(palabra))) {
   tema = "Dinero / negocios / finanzas";
     }
+    if ([
+  "mystery",
+  "mysterious",
+  "secret",
+  "unsolved",
+  "true crime",
+  "crime",
+  "murder",
+  "missing",
+  "disappearance",
+  "misterio",
+  "misterioso",
+  "secreto",
+  "sin resolver",
+  "crimen",
+  "asesinato",
+  "desaparición",
+  "desaparicion",
+  "mistério",
+  "segredo",
+  "assassinato",
+  "desaparecimento",
+  "謎",
+  "ミステリー",
+  "未解決",
+  "事件",
+  "失踪",
+  "殺人",
+  "神秘",
+  "谜",
+  "謎",
+  "悬案",
+  "懸案",
+  "失踪",
+  "失蹤",
+  "案件",
+  "미스터리",
+  "미제사건",
+  "사건",
+  "실종",
+  "살인"
+].some(palabra => texto.includes(palabra))) {
+  tema = "Misterio / crimen / casos extraños";
+    }
 if ([
   "mystery",
   "secret",
