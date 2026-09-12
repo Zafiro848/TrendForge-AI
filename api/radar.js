@@ -179,6 +179,42 @@ let tema = "Tema general";
 ].some(palabra => texto.includes(palabra))) {
   tema = "Gaming / videojuegos";
     }
+    if ([
+  "technology",
+  "tech",
+  "artificial intelligence",
+  "chatgpt",
+  "openai",
+  "robot",
+  "robotics",
+  "smartphone",
+  "iphone",
+  "android",
+  "gadget",
+  "tecnología",
+  "tecnologia",
+  "inteligencia artificial",
+  "inteligência artificial",
+  "robótica",
+  "robotica",
+  "celular",
+  "人工知能",
+  "テクノロジー",
+  "スマホ",
+  "ロボット",
+  "人工智能",
+  "科技",
+  "手机",
+  "手機",
+  "机器人",
+  "機器人",
+  "인공지능",
+  "기술",
+  "스마트폰",
+  "로봇"
+].some(palabra => texto.includes(palabra))) {
+  tema = "Tecnología / IA";
+    }
 if ([
   "mystery",
   "secret",
