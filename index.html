@@ -652,10 +652,9 @@ async function runRadar() {
 
   try {
     const response = await fetch(
-  `/api/radar?region=${encodeURIComponent(region)}`
+`/api/radar?region=${encodeURIComponent(region)}&target=${encodeURIComponent(targetRegion)}`
 );
-
-    const data = await response.json();
+      const data = await response.json();
 
     if (!response.ok || !data.ok) {
       throw new Error(
