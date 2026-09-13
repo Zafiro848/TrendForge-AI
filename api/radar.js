@@ -2039,8 +2039,25 @@ if ([
       "official mv",
       "nintendo direct",
       "movie trailer",
-      "teaser trailer"
-    ];
+      "teaser trailer",
+"tráiler oficial",
+"trailer oficial",
+"avance oficial",
+"teaser oficial",
+"vídeo oficial",
+"video oficial",
+"clipe oficial",
+"公式トレーラー",
+"公式予告",
+"公式mv",
+"공식 트레일러",
+"공식 예고편",
+"공식 mv",
+"官方预告片",
+"官方預告片",
+"官方mv"
+];
+    
 
     const dependiente =
       palabrasDependientes.some(
