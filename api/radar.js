@@ -9,6 +9,7 @@ export default async function handler(req, res) {
   }
 
   const region = String(req.query.region || "US").toUpperCase();
+  const targetRegion = String(req.query.target || "CO").toUpperCase();
 
   try {
     // 1. Obtener videos populares del país
