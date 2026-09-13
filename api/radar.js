@@ -1251,8 +1251,47 @@ if (dependiente) {
   adaptabilidadScore = Math.min(adaptabilidadScore, 2);
 }
     const penalizacionDependencia =
-      dependiente ? 10 : 0;
+      dependiente ? 25 : 0;
+const spanishMarkets = ["MX", "CO", "AR", "ES", "PE", "CL"];
 
+const universalTopics = [
+  "Gaming / videojuegos",
+  "Tecnología / IA",
+  "Animales / naturaleza",
+  "Ciencia / descubrimientos",
+  "Vehículos / motor",
+  "Comida / cocina / recetas",
+  "Salud / fitness / bienestar",
+  "DIY / manualidades / trucos",
+  "Productos / compras / recomendaciones",
+  "Humor / memes / contenido viral",
+  "Educación / aprendizaje"
+];
+
+let targetFitScore = 4;
+
+if (region === targetRegion) {
+  targetFitScore += 3;
+} else if (
+  spanishMarkets.includes(region) &&
+  spanishMarkets.includes(targetRegion)
+) {
+  targetFitScore += 2;
+}
+
+if (universalTopics.includes(tema)) {
+  targetFitScore += 2;
+}
+
+if (adaptabilidadScore >= 6) {
+  targetFitScore += 1;
+}
+
+if (dependiente) {
+  targetFitScore = Math.min(targetFitScore, 2);
+}
+
+targetFitScore = Math.max(0, Math.min(10, targetFitScore));
     const score = Math.round(
       Math.max(
         0,
@@ -1262,7 +1301,8 @@ if (dependiente) {
             alcanceScore +
             engagementScore +
             freshnessScore +
-            adaptabilidadScore -
+            adaptabilidadScore +
+          targetFitScore -
             penalizacionDependencia
         )
       )
@@ -1305,6 +1345,7 @@ if (dependiente) {
       formato,
       tema,
       adaptabilidadScore,
+      targetFitScore,
       dependiente,
       motivo,
       url: `https://www.youtube.com/watch?v=${video.id}`
