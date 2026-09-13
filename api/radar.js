@@ -1068,6 +1068,23 @@ let tema = "Tema general";
 ].some(palabra => texto.includes(palabra))) {
   tema = "Productos / compras / recomendaciones";
     }
+    const textoPrioridad = `${texto} ${String(video.canal || "").toLowerCase()}`;
+
+if ([
+  "gaming",
+  "gameplay",
+  "minecraft",
+  "fortnite",
+  "roblox",
+  "nintendo",
+  "playstation",
+  "xbox",
+  "videojuego",
+  "videojuegos",
+  "gamer"
+].some(palabra => textoPrioridad.includes(palabra))) {
+  tema = "Gaming / videojuegos";
+}
 if ([
   "mystery",
   "secret",
