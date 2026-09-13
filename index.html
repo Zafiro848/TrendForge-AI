@@ -641,6 +641,7 @@ async function runRadar() {
   };
 
   const region = countryCodes[origin] || "US";
+  const targetRegion = countryCodes[target] || "CO";
 
   result.innerHTML = `
     <div class="idea">
