@@ -12,28 +12,86 @@ export default async function handler(req, res) {
   const targetRegion = String(req.query.target || "CO").toUpperCase();
 
   try {
-    // 1. Obtener videos populares del país
-    const popularParams = new URLSearchParams({
-      part: "snippet,statistics",
-      chart: "mostPopular",
-      regionCode: region,
-      maxResults: "25",
-      key: API_KEY
-    });
+    // 1. Buscar directamente contenido IA reciente del país
+const queryIAByRegion = {
+  US: "ai generated|ai animation|ai video|ai story|ai short film",
+  MX: "generado por ia|hecho con ia|video con ia|animación ia|historia con ia",
+  CO: "generado por ia|hecho con ia|video con ia|animación ia|historia con ia",
+  AR: "generado por ia|hecho con ia|video con ia|animación ia|historia con ia",
+  ES: "generado por ia|hecho con ia|video con ia|animación ia|historia con ia",
+  PE: "generado por ia|hecho con ia|video con ia|animación ia|historia con ia",
+  CL: "generado por ia|hecho con ia|video con ia|animación ia|historia con ia",
+  BR: "gerado por ia|feito com ia|vídeo com ia|animação ia|história com ia",
+  JP: "AI生成|AI動画|生成AI|AIアニメ",
+  KR: "AI 생성|AI 영상|생성형 AI|AI 애니메이션"
+};
 
-    const popularResponse = await fetch(
-      `https://www.googleapis.com/youtube/v3/videos?${popularParams.toString()}`
-    );
+const queryIA = queryIAByRegion[region] || queryIAByRegion.US;
 
-    const popularData = await popularResponse.json();
+const publishedAfter =
+  new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
 
-    if (!popularResponse.ok) {
-      return res.status(popularResponse.status).json({
-        ok: false,
-        error: "Error obteniendo tendencias de YouTube",
-        details: popularData
-      });
-    }
+const searchParams = new URLSearchParams({
+  part: "snippet",
+  type: "video",
+  q: queryIA,
+  regionCode: region,
+  publishedAfter,
+  order: "viewCount",
+  maxResults: "50",
+  safeSearch: "moderate",
+  key: API_KEY
+});
+
+const searchResponse = await fetch(
+  `https://www.googleapis.com/youtube/v3/search?${searchParams}`
+);
+
+const searchData = await searchResponse.json();
+
+if (!searchResponse.ok) {
+  return res.status(searchResponse.status).json({
+    ok: false,
+    error: "Error buscando contenido IA en YouTube",
+    details: searchData
+  });
+}
+
+const videoIds = (searchData.items || [])
+  .map(item => item.id?.videoId)
+  .filter(Boolean);
+
+if (videoIds.length === 0) {
+  return res.status(200).json({
+    ok: true,
+    fuente: "YouTube Data API v3",
+    tipo: "Radar IA Replicable",
+    pais: region,
+    analizados: 0,
+    resultados: []
+  });
+}
+
+const detailParams = new URLSearchParams({
+  part: "snippet,statistics",
+  id: videoIds.join(","),
+  key: API_KEY
+});
+
+const popularResponse = await fetch(
+  `https://www.googleapis.com/youtube/v3/videos?${detailParams}`
+);
+
+const popularData = await popularResponse.json();
+
+if (!popularResponse.ok) {
+  return res.status(popularResponse.status).json({
+    ok: false,
+    error: "Error obteniendo estadísticas de videos IA",
+    details: popularData
+  });
+}
+    
 
     const ahora = Date.now();
 
