@@ -438,6 +438,14 @@ Abrir Radar Global →
     placeholder="Ej: Finanzas, deporte, salud, animales..."
   >
 </div>
+  <div>
+  <label>🔗 Analizar video por URL</label>
+  <input
+    id="radarUrl"
+    type="url"
+    placeholder="Pega aquí una URL de YouTube"
+  >
+  </div>
 <div>
 <label>País de origen</label>
 <select id="origin">
@@ -624,6 +632,7 @@ async function runRadar() {
   const platform = document.getElementById('platform').value;
   const result = document.getElementById('radarResult');
   const topic = document.getElementById('radarTopic').value.trim();
+  const videoUrl = document.getElementById('radarUrl').value.trim();
 
   if (platform !== 'YouTube') {
     result.innerHTML = `
@@ -659,9 +668,16 @@ async function runRadar() {
   `;
 
   try {
-    const response = await fetch(
-`/api/radar?region=${encodeURIComponent(region)}&target=${encodeURIComponent(targetRegion)}&topic=${encodeURIComponent(topic)}`
-   );
+    const params = new URLSearchParams({
+  region,
+  target: targetRegion,
+  topic,
+  videoUrl
+});
+
+const response = await fetch(
+  `/api/radar?${params.toString()}`
+);
       const data = await response.json();
 
     if (!response.ok || !data.ok) {
