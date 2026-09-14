@@ -1911,7 +1911,7 @@ if ([
   "实验",
   "實驗",
   "실험"
-].some(palabra => texto.includes(palabra))) {
+].some(palabra => textoPrioridad.includes(palabra))) {
   formato = "Experimento";
 } else if ([
   "review",
@@ -1946,7 +1946,7 @@ if ([
   "改造后",
   "改造後",
   "전후"
-].some(palabra => texto.includes(palabra))) {
+].some(palabra => textoPrioridad.includes(palabra))) {
 
   formato = "Transformación / antes y después";
     } else if ([
@@ -1971,7 +1971,7 @@ if ([
   "比較",
   "순위",
   "비교"
-].some(palabra => texto.includes(palabra))) {
+].some(palabra => textoPrioridad.includes(palabra))) {
   formato = "Comparación / ranking";
 } else if ([
   "facts",
@@ -1992,7 +1992,7 @@ if ([
   "상식",
   "사실",
   "호기심"
-].some(palabra => texto.includes(palabra))) {
+].some(palabra => textoPrioridad.includes(palabra))) {
 
   formato = "Curiosidades / datos";
 } else if ([
@@ -2010,7 +2010,7 @@ if ([
   "故事",
   "이야기",
   "사연"
-].some(palabra => texto.includes(palabra))) {
+].some(palabra => textoPrioridad.includes(palabra))) {
   formato = "Historia / narración";
 } else if ([
   "how",
@@ -2030,7 +2030,7 @@ if ([
   "怎麼",
   "왜",
   "어떻게"
-].some(palabra => texto.includes(palabra))) {
+].some(palabra => textoPrioridad.includes(palabra))) {
   formato = "Explicativo";
 }
     const coincidencias = palabrasAdaptables.filter(
