@@ -30,13 +30,28 @@ const queryIA = queryIAByRegion[region] || queryIAByRegion.US;
 
 const publishedAfter =
   new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
+const languageByRegion = {
+  US: "en",
+  MX: "es",
+  CO: "es",
+  AR: "es",
+  ES: "es",
+  PE: "es",
+  CL: "es",
+  BR: "pt",
+  JP: "ja",
+  KR: "ko"
+};
 
+const relevanceLanguage =
+  languageByRegion[region] || "en";
 const searchParams = new URLSearchParams({
   part: "snippet",
   type: "video",
   q: queryIA,
   regionCode: region,
   publishedAfter,
+  relevanceLanguage,
   order: "viewCount",
   maxResults: "50",
   safeSearch: "moderate",
@@ -57,7 +72,19 @@ if (!searchResponse.ok) {
   });
 }
 
+const regionesLatinas = ["US", "MX", "CO", "AR", "ES", "PE", "CL", "BR"];
+
 const videoIds = (searchData.items || [])
+  .filter(item => {
+    if (!regionesLatinas.includes(region)) return true;
+
+    const tituloIdioma = String(item.snippet?.title || "");
+
+    const escrituraNoLatina =
+      /[\u0900-\u097F\u0980-\u09FF\u0600-\u06FF\u0400-\u04FF\u3040-\u30FF\u3400-\u9FFF\uAC00-\uD7AF]/;
+
+    return !escrituraNoLatina.test(tituloIdioma);
+  })
   .map(item => item.id?.videoId)
   .filter(Boolean);
 
