@@ -518,25 +518,74 @@ placeholder="Ejemplo: historias de animales misteriosas">
 
 <div class="panel">
 
-<h3>✦ AI Story Studio</h3>
+<h3>✨ Producción IA</h3>
+<div id="studioReference" class="idea" style="margin-bottom:18px">
+  <strong>🎬 Referencia seleccionada</strong>
+  <p style="color:var(--muted);margin-top:6px">
+    Selecciona una referencia desde el Radar para comenzar.
+  </p>
+</div>
+  <label style="margin-top:15px">Modo de producción</label>
 
-<label>Tema de la historia</label>
+  <select id="productionMode" onchange="document.getElementById('customProductionOptions').style.display = this.value === 'personalizado' ? 'block' : 'none'">
+<select id="productionMode">
+  <option value="automatico">⚡ Automático</option>
+  <option value="personalizado">🎛️ Personalizado</option>
+</select>
+  <div id="customProductionOptions" style="display:none;margin-top:15px">
+
+  <label>Duración</label>
+  <select id="videoDuration">
+    <option value="30">30 segundos</option>
+    <option value="60">1 minuto</option>
+    <option value="180">3 minutos</option>
+    <option value="300">5 minutos</option>
+    <option value="600">10 minutos</option>
+  </select>
+
+  <label style="margin-top:15px">Formato</label>
+  <select id="videoFormat">
+    <option value="9:16">📱 Vertical 9:16</option>
+    <option value="16:9">🖥️ Horizontal 16:9</option>
+  </select>
+
+  <label style="margin-top:15px">Personajes</label>
+  <select id="characterMode">
+    <option value="automatico">IA decide los personajes</option>
+    <option value="uno">1 personaje principal</option>
+    <option value="varios">Varios personajes</option>
+    <option value="sin-personajes">Sin personajes</option>
+  </select>
+
+  <label style="margin-top:15px">Voz / narración</label>
+  <select id="voiceMode">
+    <option value="automatico">IA decide la voz</option>
+    <option value="masculina">Voz masculina</option>
+    <option value="femenina">Voz femenina</option>
+    <option value="sin-voz">Sin narración</option>
+  </select>
+
+  </div>
+<label>Tema o idea del contenido</label>
 
 <input id="storyTopic"
-placeholder="Ejemplo: un niño encuentra una puerta secreta">
+  placeholder="Ejemplo: animales, salud, autos, finanzas, historias...">
 
-<label style="margin-top:15px">Estilo</label>
+<label style="margin-top:15px">Estilo visual</label>
 
 <select id="storyStyle">
-<option>Aventura y misterio</option>
-<option>Infantil educativo</option>
-<option>Terror suave</option>
-<option>Emocional</option>
-<option>Comedia</option>
+  <option>Cinematográfico</option>
+  <option>Animación 3D</option>
+  <option>Realista</option>
+  <option>Caricatura</option>
+  <option>Documental</option>
+  <option>Educativo</option>
+  <option>Historia / narración</option>
+  <option>IA decide el estilo</option>
 </select>
 
 <button class="btn full" onclick="generateStory()">
-✨ Generar concepto y guion
+✨ Crear proyecto original
 </button>
 
 <div id="storyResult"></div>
@@ -704,6 +753,7 @@ const response = await fetch(
     `;
 
     data.resultados.forEach(video => {
+      localStorage.setItem(`videoReferencia_${video.id}`, JSON.stringify(video));
       const titulo = video.titulo || "Sin título";
       const canal = video.canal || "Canal desconocido";
 
@@ -761,6 +811,15 @@ const response = await fetch(
         </a>
       </p>
     ` : ""}
+    ${video.aptoReferencia ? `
+  <button
+    type="button"
+    style="margin-top:12px"
+    onclick="crearContenidoOriginal('${video.id}')"
+  >
+    ✨ Crear contenido original
+  </button>
+` : ""}
 
   </div>
 `;
@@ -778,7 +837,45 @@ const response = await fetch(
       </div>
     `;
   }
+} 
+  function crearContenidoOriginal(videoId) {
+  localStorage.setItem("videoReferenciaId", videoId);
+    const datosReferencia = JSON.parse(
+  localStorage.getItem(`videoReferencia_${videoId}`) || "null"
+);
+showPage('studio');
+  const referencia = document.getElementById("studioReference");
+
+if (referencia && datosReferencia) {
+  referencia.innerHTML = `
+    <strong>🎬 Referencia seleccionada</strong>
+
+    ${datosReferencia.miniatura ? `
+      <img
+        src="${datosReferencia.miniatura}"
+        alt="${datosReferencia.titulo || "Referencia"}"
+        style="width:100%;border-radius:12px;margin-top:12px"
+      >
+    ` : ""}
+
+    <p style="margin-top:10px">
+      <strong>${datosReferencia.titulo || "Sin título"}</strong>
+    </p>
+
+    <p style="color:var(--muted);margin-top:5px">
+      ${datosReferencia.canal || "Canal desconocido"}
+    </p>
+
+    ${datosReferencia.url ? `
+      <p style="margin-top:8px">
+        <a href="${datosReferencia.url}" target="_blank" rel="noopener noreferrer">
+          Ver referencia en YouTube
+        </a>
+      </p>
+    ` : ""}
+  `;
 }
+  }
 
 function analyzeTrend(){
 const topic=document.getElementById('trendInput').value.trim();
@@ -828,36 +925,104 @@ showPage('studio');
 
 function generateStory(){
 
-const topic=document.getElementById('storyTopic').value.trim();
-const style=document.getElementById('storyStyle').value;
+const mode = document.getElementById('productionMode').value;
 
+const videoId = localStorage.getItem("videoReferenciaId") || "";
+
+const datosReferencia = videoId
+  ? JSON.parse(
+      localStorage.getItem(`videoReferencia_${videoId}`) || "null"
+    )
+  : null;
+
+const topicInput =
+  document.getElementById('storyTopic').value.trim();
+
+const topic =
+  topicInput ||
+  datosReferencia?.titulo ||
+  "";
+
+const style =
+  document.getElementById('storyStyle').value;
+
+const duration =
+  mode === "personalizado"
+    ? document.getElementById('videoDuration').value
+    : "IA decide";
+
+const format =
+  mode === "personalizado"
+    ? document.getElementById('videoFormat').value
+    : "IA decide";
+
+const characters =
+  mode === "personalizado"
+    ? document.getElementById('characterMode').value
+    : "IA decide";
+
+const voice =
+  mode === "personalizado"
+    ? document.getElementById('voiceMode').value
+    : "IA decide";
 if(!topic){
 alert('Escribe primero un tema.');
 return;
 }
+const proyecto = {
+  referencia: datosReferencia
+    ? {
+        id: videoId,
+        titulo: datosReferencia.titulo || "",
+        canal: datosReferencia.canal || "",
+        url: datosReferencia.url || ""
+      }
+    : null,
+  modo: mode,
+  tema: topic,
+  estilo: style,
+  duracion: duration,
+  formato: format,
+  personajes: characters,
+  voz: voice
+};
+const title =
+  "Proyecto original: " +
+  topic.charAt(0).toUpperCase() +
+  topic.slice(1);
 
-const title=
-'Contenido sobre '+topic.charAt(0).toUpperCase()+topic.slice(1);
+const story = `
+CONCEPTO ORIGINAL:
+Crear una propuesta nueva basada únicamente en la idea general de referencia, sin copiar personajes, diálogos, escenas, música ni elementos protegidos.
 
-const story=`
+TEMA:
+${topic}
 
-GANCHO:
-Algo está ocurriendo y casi nadie está prestando atención...
+CONFIGURACIÓN DEL PROYECTO:
+Modo: ${mode}
+Estilo visual: ${style}
+Duración: ${duration}
+Formato: ${format}
+Personajes: ${characters}
+Voz / narración: ${voice}
 
-DESARROLLO:
-Presenta rápidamente el contexto y explica por qué el tema es interesante.
+REFERENCIA:
+${datosReferencia?.titulo || "Proyecto creado sin referencia externa"}
 
-PUNTO DE CURIOSIDAD:
-Introduce un dato, problema o situación que mantenga al espectador mirando.
+OBJETIVO CREATIVO:
+Transformar el tema en una producción original con identidad propia, nuevos personajes, nueva estructura visual y nuevo guion.
 
-DESARROLLO PRINCIPAL:
-Explica el tema de forma clara, dinámica y visual.
+ESTRUCTURA:
+1. Gancho inicial.
+2. Presentación clara del concepto.
+3. Desarrollo visual dinámico.
+4. Punto de curiosidad o conflicto.
+5. Momento principal.
+6. Giro o elemento diferenciador.
+7. Cierre memorable.
 
-GIRO:
-Presenta una información inesperada que cambie la percepción inicial.
-
-CIERRE:
-Resume la idea principal y deja una pregunta o reflexión que invite a interactuar.
+SIGUIENTE PASO:
+Generar con IA el concepto definitivo, guion, escenas, narración, prompts visuales, título y miniatura.
 `;
 
 document.getElementById('storyResult').innerHTML=`
@@ -866,11 +1031,31 @@ document.getElementById('storyResult').innerHTML=`
 
 <strong>🎬 ${title}</strong>
 
-<p style="color:var(--muted);margin-top:5px">
-Estilo: ${style}
+<p style="color:var(--muted);margin-top:10px">
+  ⚡ Modo: ${mode}
 </p>
 
-<textarea style="margin-top:15px">${story}</textarea>
+<p style="color:var(--muted);margin-top:5px">
+  🎨 Estilo: ${style}
+</p>
+
+<p style="color:var(--muted);margin-top:5px">
+  ⏱️ Duración: ${duration}
+</p>
+
+<p style="color:var(--muted);margin-top:5px">
+  📐 Formato: ${format}
+</p>
+
+<p style="color:var(--muted);margin-top:5px">
+  👥 Personajes: ${characters}
+</p>
+
+<p style="color:var(--muted);margin-top:5px">
+  🎙️ Voz: ${voice}
+</p>
+
+<textarea style="margin-top:15px;min-height:320px">${story}</textarea>
 
 <button class="btn full"
 onclick="saveProject('${title.replace(/'/g,"")}')">
