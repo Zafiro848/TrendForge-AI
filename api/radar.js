@@ -95,25 +95,90 @@ export default async function handler(req, res) {
       });
     }
 
-    // 3. Valores máximos para comparar videos
-    const maxViewsPerDay = Math.max(
-      1,
-      ...base.map(video => video.viewsPerDay)
-    );
-
-    const maxViews = Math.max(
-      1,
-      ...base.map(video => video.views)
-    );
+    
 
     // 4. Calcular puntuación de oportunidad V2
-const resultados = base
-  .map(video => {
+const baseIA = base
+  .filter(video => {
+    const textoIA =
+      `${video.titulo} ${video.descripcion} ${video.canal}`.toLowerCase();
+
+    const senalesIA = [
+      "ai generated",
+      "generated with ai",
+      "made with ai",
+      "ai video",
+      "ai animation",
+      "ai short film",
+      "ai story",
+      "ai horror",
+      "ai animals",
+      "artificial intelligence",
+      "generado por ia",
+      "hecho con ia",
+      "video con ia",
+      "vídeo con ia",
+      "animación ia",
+      "animacion ia",
+      "historia con ia",
+      "inteligencia artificial",
+      "gerado por ia",
+      "feito com ia",
+      "vídeo com ia",
+      "video com ia",
+      "inteligência artificial",
+      "ai生成",
+      "ai動画",
+      "生成ai",
+      "人工智能",
+      "ai 생성",
+      "ai 영상",
+      "생성형 ai",
+      "인공지능"
+    ];
+
+    const contenidoNoDeseado = [
+      "official trailer",
+      "tráiler oficial",
+      "trailer oficial",
+      "gameplay trailer",
+      "launch trailer",
+      "announcement trailer",
+      "movie trailer",
+      "teaser trailer",
+      "official music video",
+      "official mv",
+      "music video",
+      "nintendo direct",
+      "mrbeast"
+    ];
+
+    const tieneSenalIA =
+      senalesIA.some(palabra => textoIA.includes(palabra)) ||
+      /\b(ai|ia)\b/i.test(textoIA);
+
+    const estaBloqueado =
+      contenidoNoDeseado.some(palabra => textoIA.includes(palabra));
+
+    return tieneSenalIA && !estaBloqueado;
+});
+
+const maxViewsPerDayIA = Math.max(
+  1,
+  ...baseIA.map(video => video.viewsPerDay)
+);
+
+const maxViewsIA = Math.max(
+  1,
+  ...baseIA.map(video => video.views)
+);
+
+const resultados = baseIA.map(video => {
     const velocidadScore =
-      (video.viewsPerDay / maxViewsPerDay) * 35;
+      (video.viewsPerDay / maxViewsPerDayIA) * 35;
 
     const alcanceScore =
-      (video.views / maxViews) * 15;
+      (video.views / maxViewsIA) * 15;
 
     const engagementScore =
       Math.min(video.engagement / 10, 1) * 20;
