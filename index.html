@@ -699,69 +699,51 @@ async function runRadar() {
         video.views || 0
       ).toLocaleString('es-CO');
 
-      const likes = Number(
-        video.likes || 0
-      ).toLocaleString('es-CO');
-
-      const comentarios = Number(
-        video.comments || 0
-      ).toLocaleString('es-CO');
-
-      const vistasDia = Math.round(
-        Number(video.viewsPerDay || 0)
-      ).toLocaleString('es-CO');
-
-      const score = Number(video.score || 0);
-      const nivel = video.nivel || "Sin clasificar";
+      
       const topic = video.tema || "General topic";
       const formato = video.formato || "Contenido general";
-      const adaptabilidad = Number(video.adaptabilidadScore || 0);
-      const targetFit = Number(video.targetFitScore || 0);
-const motivo = video.motivo || "Sin análisis disponible.";
+      
+     html += `
+  <div class="opportunity" style="display:block">
 
-      html += `
-        <div class="opportunity">
-          <div>
-            <strong>${titulo}</strong>
+    ${video.miniatura ? `
+      <img
+        src="${video.miniatura}"
+        alt="${titulo}"
+        style="width:100%;border-radius:12px;margin-bottom:12px;display:block;"
+      >
+    ` : ""}
+<strong>${titulo}</strong>
+    <p style="color:var(--muted);margin-top:5px">
+      ${canal}${fecha ? ' · ' + fecha : ''}
+    </p>
 
-            <p style="color:var(--muted);margin-top:5px">
-              ${canal}${fecha ? ' · ' + fecha : ''}
-            </p>
+    <p style="color:var(--muted);margin-top:7px">
+      👁 ${vistas} vistas
+    </p>
 
-            <p style="color:var(--muted);margin-top:7px">
-              👁️ ${vistas} vistas · 👍 ${likes} · 💬 ${comentarios}
-            </p>
+    <p style="color:var(--muted);margin-top:6px">
+      🎯 Nicho: ${topic}
+    </p>
 
-            <p style="color:var(--muted);margin-top:5px">
-              ⚡ ${vistasDia} vistas/día
-            </p>
+    <p style="color:var(--muted);margin-top:6px">
+      🎬 Formato: ${formato}
+    </p>
 
-            <p style="margin-top:8px">
-              <strong>${nivel}</strong>
-            </p>
-            <p style="color:var(--muted);margin-top:6px">
-  🎯 Nicho detectado: ${topic}
-</p>
-            <p style="color:var(--muted);margin-top:6px">
-  🎬 Formato detectado: ${formato}
-</p>
-            <p style="color:var(--muted);margin-top:6px">
-  🧩 Potencial de adaptación: ${adaptabilidad}/10
-</p>
-<p style="color:var(--muted);margin-top:6px">
-  🌎 Compatibilidad con país destino: ${targetFit}/10
-</p>
-<p style="color:var(--muted);margin-top:6px">
-  💡 ${motivo}
-</p>
-          </div>
+    <p style="margin-top:8px">
+      ✅ Pasa los filtros de contenido IA
+    </p>
 
-          <div style="text-align:center;min-width:65px">
-            <div class="score">${score}</div>
-            <span class="badge">YouTube</span>
-          </div>
-        </div>
-      `;
+    ${video.url ? `
+      <p style="margin-top:10px">
+        <a href="${video.url}" target="_blank" rel="noopener noreferrer">
+          Ver en YouTube
+        </a>
+      </p>
+    ` : ""}
+
+  </div>
+`;
     });
 
     result.innerHTML = html;
