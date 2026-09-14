@@ -185,9 +185,14 @@ if (!popularResponse.ok) {
     // 4. Calcular puntuación de oportunidad V2
 const baseIA = base
   .filter(video => {
-    const textoIA =
-      `${video.titulo} ${video.descripcion} ${video.canal}`.toLowerCase();
+    const textoPrincipalIA =
+  `${String(video.titulo || "")} ${String(video.canal || "")}`.toLowerCase();
 
+const descripcionIA =
+  String(video.descripcion || "").toLowerCase();
+
+const textoIA =
+  `${textoPrincipalIA} ${descripcionIA}`;
     const senalesIA = [
       "ai generated",
       "generated with ai",
@@ -260,9 +265,20 @@ const baseIA = base
 "reacción a la ia",
 "reaccion a la ia"
     ];
-
+const senalesFuertesDescripcion = [
+  "ai generated",
+  "generated with ai",
+  "made with ai",
+  "generado por ia",
+  "hecho con ia",
+  "gerado por ia",
+  "feito com ia",
+  "ai生成",
+  "ai 생성"
+];
     const tieneSenalIA =
-  senalesIA.some(palabra => textoIA.includes(palabra));
+  senalesIA.some(palabra => textoPrincipalIA.includes(palabra)) ||
+  senalesFuertesDescripcion.some(palabra => descripcionIA.includes(palabra));
 
     const estaBloqueado =
       contenidoNoDeseado.some(palabra => textoIA.includes(palabra));
