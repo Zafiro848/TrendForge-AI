@@ -923,8 +923,7 @@ document.getElementById('storyTopic').value=topic;
 showPage('studio');
 }
 
-function generateStory(){
-
+async function generateStory(){
 const mode = document.getElementById('productionMode').value;
 
 const videoId = localStorage.getItem("videoReferenciaId") || "";
@@ -986,45 +985,51 @@ const proyecto = {
   personajes: characters,
   voz: voice
 };
+
+  const resultBox = document.getElementById('storyResult');
+
+resultBox.innerHTML = `
+  <div class="idea">
+    <strong>✨ Generando proyecto con IA...</strong>
+    <p style="color:var(--muted);margin-top:6px">
+      Creando concepto, guion, escenas, narración y prompts.
+    </p>
+  </div>
+`;
+
+const response = await fetch('/api/generate', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    proyecto
+  })
+});
+
+const data = await response.json();
+
+if (!response.ok || !data.ok) {
+  resultBox.innerHTML = `
+    <div class="idea">
+      <strong>⚠️ No se pudo generar el proyecto</strong>
+      <p style="color:var(--muted);margin-top:6px">
+        ${data.error || "Error desconocido"}
+      </p>
+    </div>
+  `;
+  return;
+}
+
 const title =
   "Proyecto original: " +
   topic.charAt(0).toUpperCase() +
   topic.slice(1);
 
-const story = `
-CONCEPTO ORIGINAL:
-Crear una propuesta nueva basada únicamente en la idea general de referencia, sin copiar personajes, diálogos, escenas, música ni elementos protegidos.
-
-TEMA:
-${topic}
-
-CONFIGURACIÓN DEL PROYECTO:
-Modo: ${mode}
-Estilo visual: ${style}
-Duración: ${duration}
-Formato: ${format}
-Personajes: ${characters}
-Voz / narración: ${voice}
-
-REFERENCIA:
-${datosReferencia?.titulo || "Proyecto creado sin referencia externa"}
-
-OBJETIVO CREATIVO:
-Transformar el tema en una producción original con identidad propia, nuevos personajes, nueva estructura visual y nuevo guion.
-
-ESTRUCTURA:
-1. Gancho inicial.
-2. Presentación clara del concepto.
-3. Desarrollo visual dinámico.
-4. Punto de curiosidad o conflicto.
-5. Momento principal.
-6. Giro o elemento diferenciador.
-7. Cierre memorable.
-
-SIGUIENTE PASO:
-Generar con IA el concepto definitivo, guion, escenas, narración, prompts visuales, título y miniatura.
-`;
-
+const story =
+  data.resultado ||
+  "La IA no devolvió contenido.";
+  
 document.getElementById('storyResult').innerHTML=`
 
 <div class="idea">
