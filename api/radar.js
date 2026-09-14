@@ -265,21 +265,9 @@ const textoIA =
 "reacción a la ia",
 "reaccion a la ia"
     ];
-const senalesFuertesDescripcion = [
-  "ai generated",
-  "generated with ai",
-  "made with ai",
-  "generado por ia",
-  "hecho con ia",
-  "gerado por ia",
-  "feito com ia",
-  "ai生成",
-  "ai 생성"
-];
-    const tieneSenalIA =
-  senalesIA.some(palabra => textoPrincipalIA.includes(palabra)) ||
-  senalesFuertesDescripcion.some(palabra => descripcionIA.includes(palabra));
 
+const tieneSenalIA =
+  senalesIA.some(palabra => textoPrincipalIA.includes(palabra));
     const estaBloqueado =
       contenidoNoDeseado.some(palabra => textoIA.includes(palabra));
 
