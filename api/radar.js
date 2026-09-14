@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   const region = String(req.query.region || "US").toUpperCase();
   const targetRegion = String(req.query.target || "CO").toUpperCase();
-
+const topic = String(req.query.topic || "").trim();
   try {
     // 1. Buscar directamente contenido IA reciente del país
 const queryIAByRegion = {
@@ -26,7 +26,14 @@ const queryIAByRegion = {
   KR: "AI 생성|AI 영상|생성형 AI|AI 애니메이션"
 };
 
-const queryIA = queryIAByRegion[region] || queryIAByRegion.US;
+const baseQueryIA = queryIAByRegion[region] || queryIAByRegion.US;
+
+const queryIA = topic
+  ? baseQueryIA
+      .split("|")
+      .map(termino => `${topic} ${termino.trim()}`)
+      .join("|")
+  : baseQueryIA;
 
 const publishedAfter =
   new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
