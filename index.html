@@ -481,7 +481,7 @@ Abrir Radar Global →
 
 </div>
 
-<button class="btn full" onclick="runRadar()">🔎 Buscar oportunidades</button>
+<button class="btn full" onclick="runRadar()">🔎 Buscar referencias</button>
 
 <div id="radarResult"></div>
 
@@ -699,7 +699,7 @@ const response = await fetch(
     let html = `
       <div class="idea">
         <strong>🌎 ${origin} → ${target} · YouTube</strong>
-        <p>🔥 Tendencias detectadas con estadísticas reales:</p>
+        <p>🔎 Referencias encontradas y filtradas::</p>
       </div>
     `;
 
@@ -738,9 +738,7 @@ const response = await fetch(
       👁 ${vistas} vistas
     </p>
 
-    <p style="color:var(--muted);margin-top:6px">
-      🎯 Nicho: ${topic}
-    </p>
+    
 
     <p style="color:var(--muted);margin-top:6px">
       🎬 Formato: ${formato}
