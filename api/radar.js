@@ -277,7 +277,7 @@ const estaBloqueado =
 
 const contenidoPromocional =
   /\b(shop|buy now|order now|sale|discount|sponsored|advertisement|promotion)\b|https?:\/\/|www\.|\b[a-z0-9-]+\.(com|co|net|shop|store)\b/i.test(textoPrincipalIA);
-return tieneSenalIA && !estaBloqueado && !categoriaNoDeseada && !contenidoPromocional;
+return tieneSenalIA &&
   !estaBloqueado &&
   !categoriaNoDeseada &&
   !contenidoPromocional;
