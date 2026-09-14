@@ -357,11 +357,29 @@ const estaBloqueado =
 
 const contenidoPromocional =
   /\b(shop|buy now|order now|sale|discount|sponsored|advertisement|promotion)\b|https?:\/\/|www\.|\b[a-z0-9-]+\.(com|co|net|shop|store)\b/i.test(textoPrincipalIA);
-return tieneSenalIA &&
+const aptoReferencia =
+  tieneSenalIA &&
   !estaBloqueado &&
   !categoriaNoDeseada &&
   !contenidoPromocional &&
   coincideTema;
+
+video.aptoReferencia = aptoReferencia;
+
+video.motivoFiltro =
+  !tieneSenalIA
+    ? "No se detectaron señales claras de contenido creado con IA"
+    : estaBloqueado
+    ? "Contenido dependiente de marca, franquicia o material no conveniente"
+    : categoriaNoDeseada
+    ? "Categoría con mayor riesgo para nuestro objetivo"
+    : contenidoPromocional
+    ? "Contenido promocional o comercial"
+    : !coincideTema
+    ? "No coincide suficientemente con el tema buscado"
+    : "Apto como referencia para crear contenido original";
+
+return videoIdDirecto ? true : aptoReferencia;
 });
 
 const maxViewsPerDayIA = Math.max(
