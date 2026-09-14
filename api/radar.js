@@ -219,6 +219,21 @@ const descripcionIA =
 
 const textoIA =
   `${textoPrincipalIA} ${descripcionIA}`;
+    const terminosTema = topicBusqueda
+  .toLowerCase()
+  .split(/\s+/)
+  .filter(Boolean);
+
+const coincideTema =
+  !topic ||
+  terminosTema.some(termino => {
+    const raiz =
+      termino.length > 5
+        ? termino.slice(0, 5)
+        : termino.replace(/s$/, "");
+
+    return textoIA.includes(raiz);
+  });
     const senalesIA = [
       "ai generated",
       "generated with ai",
@@ -306,7 +321,8 @@ const contenidoPromocional =
 return tieneSenalIA &&
   !estaBloqueado &&
   !categoriaNoDeseada &&
-  !contenidoPromocional;
+  !contenidoPromocional &&
+  coincideTema;
 });
 
 const maxViewsPerDayIA = Math.max(
