@@ -1120,6 +1120,17 @@ if ([
   "novela",
   "avances",
   "avance",
+  "movie",
+"film",
+"trailer",
+"tv show",
+"television",
+"película",
+"pelicula",
+"cine",
+"serie de televisión",
+"serie de television",
+"filme",
   "dance performance",
   "music video",
   "official mv",
@@ -1879,7 +1890,7 @@ if ([
   "神秘",
   "미스터리",
   "비밀"
-].some(palabra => texto.includes(palabra))) {
+].some(palabra => textoPrioridad.includes(palabra))) {
   formato = "Misterio / descubrimiento";
 } else if ([
   "challenge",
@@ -1891,7 +1902,7 @@ if ([
   "挑戦",
   "挑战",
   "도전"
-].some(palabra => texto.includes(palabra))) {
+].some(palabra => textoPrioridad.includes(palabra))) {
   formato = "Reto / desafío";
 } else if ([
   "experiment",
@@ -2040,6 +2051,9 @@ if ([
       "nintendo direct",
       "movie trailer",
       "teaser trailer",
+      "gameplay trailer",
+"launch trailer",
+"announcement trailer",
 "tráiler oficial",
 "trailer oficial",
 "avance oficial",
