@@ -747,8 +747,14 @@ const response = await fetch(
     </p>
 
     <p style="margin-top:8px">
-      ✅ Pasa los filtros de contenido IA
-    </p>
+  ${video.aptoReferencia
+    ? "✅ Apto como referencia IA"
+    : "⛔ Descartado / riesgo"}
+</p>
+
+<p style="color:var(--muted);margin-top:5px">
+  ${video.motivoFiltro || ""}
+</p>
 
     ${video.url ? `
       <p style="margin-top:10px">
