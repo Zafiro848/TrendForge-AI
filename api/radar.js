@@ -326,12 +326,12 @@ return tieneSenalIA &&
 });
 
 const maxViewsPerDayIA = Math.max(
-  1,
+  10000,
   ...baseIA.map(video => video.viewsPerDay)
 );
 
 const maxViewsIA = Math.max(
-  1,
+  50000,
   ...baseIA.map(video => video.views)
 );
 
