@@ -11,7 +11,38 @@ export default async function handler(req, res) {
   const region = String(req.query.region || "US").toUpperCase();
   const targetRegion = String(req.query.target || "CO").toUpperCase();
 const topic = String(req.query.topic || "").trim();
+  const videoUrl = String(req.query.videoUrl || "").trim();
+  const obtenerVideoId = (url) => {
   try {
+    const parsed = new URL(url);
+
+    if (parsed.hostname.includes("youtu.be")) {
+      return parsed.pathname.split("/").filter(Boolean)[0] || "";
+    }
+
+    if (parsed.hostname.includes("youtube.com")) {
+      if (parsed.pathname === "/watch") {
+        return parsed.searchParams.get("v") || "";
+      }
+
+      const partes = parsed.pathname.split("/").filter(Boolean);
+
+      if (["shorts", "embed", "live"].includes(partes[0])) {
+        return partes[1] || "";
+      }
+    }
+  } catch (error) {
+    return "";
+  }
+
+  return "";
+};
+
+const videoIdDirecto = videoUrl
+  ? obtenerVideoId(videoUrl)
+  : "";
+  try {
+    
     // 1. Buscar directamente contenido IA reciente del país
 const queryIAByRegion = {
   US: "ai generated|ai animation|ai video|ai story|ai short film",
@@ -84,35 +115,43 @@ const searchParams = new URLSearchParams({
   key: API_KEY
 });
 
-const searchResponse = await fetch(
-  `https://www.googleapis.com/youtube/v3/search?${searchParams}`
-);
+let searchData = { items: [] };
 
-const searchData = await searchResponse.json();
+if (!videoIdDirecto) {
+  const searchResponse = await fetch(
+    `https://www.googleapis.com/youtube/v3/search?${searchParams.toString()}`
+  );
 
-if (!searchResponse.ok) {
-  return res.status(searchResponse.status).json({
-    ok: false,
-    error: "Error buscando contenido IA en YouTube",
-    details: searchData
-  });
+  searchData = await searchResponse.json();
+
+  if (!searchResponse.ok) {
+    return res.status(searchResponse.status).json({
+      ok: false,
+      error: "Error buscando contenido IA en YouTube",
+      details: searchData
+    });
+  }
 }
 
 const regionesLatinas = ["US", "MX", "CO", "AR", "ES", "PE", "CL", "BR"];
 
-const videoIds = (searchData.items || [])
-  .filter(item => {
-    if (!regionesLatinas.includes(region)) return true;
+const videoIds = videoIdDirecto
+  ? [videoIdDirecto]
+  : (searchData.items || [])
+      .filter(item => {
+        if (!regionesLatinas.includes(region)) return true;
 
-    const tituloIdioma = String(item.snippet?.title || "");
+        const tituloIdioma = String(
+          item.snippet?.title || ""
+        );
 
-    const escrituraNoLatina =
-      /[\u0900-\u097F\u0980-\u09FF\u0600-\u06FF\u0400-\u04FF\u3040-\u30FF\u3400-\u9FFF\uAC00-\uD7AF]/;
+        const escrituraNoLatina =
+          /[\u0900-\u097F\u0980-\u09FF\u0600-\u06FF\u0400-\u04FF]/;
 
-    return !escrituraNoLatina.test(tituloIdioma);
-  })
-  .map(item => item.id?.videoId)
-  .filter(Boolean);
+        return !escrituraNoLatina.test(tituloIdioma);
+      })
+      .map(item => item.id?.videoId)
+      .filter(Boolean);
 
 if (videoIds.length === 0) {
   return res.status(200).json({
