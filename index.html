@@ -430,7 +430,14 @@ Abrir Radar Global →
 <h3>🌎 Radar Global de Oportunidades</h3>
 
 <div class="form">
-
+<div>
+  <label>🔎 Buscar por tema</label>
+  <input
+    id="radarTopic"
+    type="text"
+    placeholder="Ej: Finanzas, deporte, salud, animales..."
+  >
+</div>
 <div>
 <label>País de origen</label>
 <select id="origin">
@@ -616,6 +623,7 @@ async function runRadar() {
   const target = document.getElementById('target').value;
   const platform = document.getElementById('platform').value;
   const result = document.getElementById('radarResult');
+  const topic = document.getElementById('radarTopic').value.trim();
 
   if (platform !== 'YouTube') {
     result.innerHTML = `
@@ -652,8 +660,8 @@ async function runRadar() {
 
   try {
     const response = await fetch(
-`/api/radar?region=${encodeURIComponent(region)}&target=${encodeURIComponent(targetRegion)}`
-);
+`/api/radar?region=${encodeURIComponent(region)}&target=${encodeURIComponent(targetRegion)}&topic=${encodeURIComponent(topic)}`
+   );
       const data = await response.json();
 
     if (!response.ok || !data.ok) {
