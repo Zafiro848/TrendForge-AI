@@ -165,7 +165,7 @@ const baseIA = base
       "ai generated",
       "generated with ai",
       "made with ai",
-      "ai video",
+
       "ai animation",
       "ai short film",
       "ai story",
@@ -174,24 +174,22 @@ const baseIA = base
       
       "generado por ia",
       "hecho con ia",
-      "video con ia",
-      "vídeo con ia",
+      
       "animación ia",
       "animacion ia",
       "historia con ia",
       
       "gerado por ia",
       "feito com ia",
-      "vídeo com ia",
-      "video com ia",
+      
       
       "ai生成",
-      "ai動画",
-      "生成ai",
+      
+      
       
       "ai 생성",
-      "ai 영상",
-      "생성형 ai",
+      
+      
       
     ];
 
@@ -208,7 +206,32 @@ const baseIA = base
       "official mv",
       "music video",
       "nintendo direct",
-      "mrbeast"
+      "mrbeast",
+      
+"full movie",
+"película completa",
+"pelicula completa",
+"filme completo",
+"interview",
+"entrevista",
+"podcast",
+"news",
+"breaking news",
+"noticias",
+"notícia",
+"noticia",
+"ai news",
+"noticias de ia",
+"tutorial",
+"how to use ai",
+"how to use chatgpt",
+"ai tools",
+"herramientas de ia",
+"review of ai",
+"ai review",
+"reaction to ai",
+"reacción a la ia",
+"reaccion a la ia"
     ];
 
     const tieneSenalIA =
@@ -265,9 +288,7 @@ const resultados = baseIA.map(video => {
       "mystery",
       "facts",
       "secret",
-      "viral",
-      "trend",
-      "trending",
+      
       "curious",
       "review",
       "before",
