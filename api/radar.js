@@ -27,11 +27,30 @@ const queryIAByRegion = {
 };
 
 const baseQueryIA = queryIAByRegion[region] || queryIAByRegion.US;
+const topicTranslations = {
+  US: {
+    "finanzas": "finance",
+    "deporte": "sports",
+    "deportes": "sports",
+    "autos": "cars",
+    "salud": "health",
+    "animales": "animals",
+    "tecnología": "technology",
+    "tecnologia": "technology",
+    "negocios": "business",
+    "historia": "history",
+    "terror": "horror",
+    "misterio": "mystery"
+  }
+};
+    const topicKey = topic.toLowerCase();
 
+const topicBusqueda =
+  topicTranslations[region]?.[topicKey] || topic;
 const queryIA = topic
   ? baseQueryIA
       .split("|")
-      .map(termino => `${topic} ${termino.trim()}`)
+    .map(termino => `${topicBusqueda} ${termino.trim()}`)
       .join("|")
   : baseQueryIA;
 
